@@ -12,7 +12,7 @@ const Navbar = () => {
 
 	return (
 		<nav className="p-2 md:px-16 border-b-[2px] border-gray-200  w-full">
-			<div className="flex gap-16 items-center p-4">
+			<div className="flex justify-between p-4 m-auto  border-gray-200 lg:justify-start lg:gap-16">
 				<div className="text-xl font-bold">
 					<Link to="/">Recipe Recommender</Link>
 				</div>
@@ -34,7 +34,6 @@ const Navbar = () => {
 					<a href="#" className="text-sm font-medium hover:text-[#2667FF]">
 						Contact
 					</a>
-					
 				</div>
 			</div>
 
@@ -45,7 +44,9 @@ const Navbar = () => {
 				} transition-transform lg:hidden`}
 			>
 				<div className="flex justify-between p-4 m-auto border-b-[2px] border-gray-200">
-					<div className="text-xl font-bold p-2">Logo</div>
+					<div className="text-xl font-bold">
+						<Link to="/">Recipe Recommender</Link>
+					</div>
 					<button onClick={toggleMenu} className="focus:outline-none">
 						<FontAwesomeIcon
 							icon={faTimes}
@@ -63,7 +64,6 @@ const Navbar = () => {
 					<a href="#" className="text-lg font-medium hover:text-[#2667FF]">
 						Contact
 					</a>
-					
 				</div>
 			</div>
 		</nav>

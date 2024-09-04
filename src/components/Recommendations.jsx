@@ -1,29 +1,32 @@
-import React,{useState, useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Recommendations = () => {
-
+function Recommendations () {
+  const location = useLocation();
+  const recipes = location.state?.recipes || [];
+  const navigate = useNavigate();
+  const handleCardClick = (recipe) => {
+    navigate(`/recipe/${recipe.dishName}`, { state: { recipe } });
+  };
+ 
   return (
 		<div className="mt-8">
-			<h2 className="text-center">
+			<h1 className="text-center">
 				MEAL RECOMMENDATIONS BASED ON YOUR PREFERENCES
-			</h2>
-			<div className="cards  flex flex-col gap-4">
-				<div className="card-body w-[80%] m-auto bg-white shadow-lg shadow-blue-200 p-4 rounded-lg">
-					<div className="card-title-tag flex justify-between">
-						<h2 className="card-title font-bold">
-							Tuna and Plantain Stew with Palm Wine
-						</h2>
-						<p className="text-gray-300 text-[12px]">
-							#TunaStew #WestAfricanCuisine
-						</p>
-					</div>
-					<p className="card-text">
-						Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita
-						illum vero consequatur. Doloribus sed ratione fugiat aut nesciunt,
-						quod, neque, veritatis autem pariatur facilis at rerum quidem
-						voluptatum nostrum temporibus.
-					</p>
-				</div>
+			</h1>
+      <div className="cards  flex flex-col gap-4">
+        {recipes.map((recipe, index) => (
+          <div key={index} className="card-title-tag flex justify-between" onClick={() => handleCardClick(recipe)}>
+            <div className="card-title-tag flex justify-between">
+								<h2 className="card-title font-bold">{recipe.dishName}</h2>
+								<p className="text-gray-300 text-[12px]">
+									#{recipe.hashtags}
+								</p>
+            </div>
+            <p className="text-gray-300 text-[12px]">{recipe.shortDescription}</p>
+          </div>))}
+        
+				
 			</div>
 		</div>
 	);

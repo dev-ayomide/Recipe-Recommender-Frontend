@@ -4,65 +4,76 @@ import backgroundImage from "../images/background.jpg";
 import LoadingSpinner from "./LoadingSpinner";
 import "../styles/App.css";
 
+function HeroSection() {
+	const [loading, setLoading] = useState(false);
+	const [ingredients, setIngredients] = useState("");
+	const [allergies, setAllergies] = useState("");
+	const navigate = useNavigate();
 
-const HeroSection = () => {
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate(); 
+	const handleGenerate = async () => {
+		if (!ingredients) {
+			alert("Please enter an ingredient.");
+			return;
+		}
 
-	const handleSearch = () => {
+		const response = await fetch("/api/recommend-dishes", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ ingredients, allergies }),
+		});
+
+		const data = await response.json();
 		setLoading(true);
 
-        setTimeout(() => {
-            setLoading(false);
-            navigate("/Recommendations");
+		setTimeout(() => {
+			setLoading(false);
+			navigate("/recipes", { state: { recipes: data.response } });
 		}, 3000);
 	};
 
 	return (
-		<div>
-			<div
-				className="relative h-screen bg-cover bg-center"
-				style={{ backgroundImage: `url(${backgroundImage})` }}
-			>
-				{/* Overlay */}
-				<div className="absolute inset-0 bg-blue-400 bg-opacity-60"></div>
+		<div
+			className="relative h-screen bg-cover bg-center"
+			style={{ backgroundImage: `url(${backgroundImage})` }}
+		>
+			{/* Overlay */}
+			<div className="absolute inset-0 bg-blue-400 bg-opacity-60"></div>
 
-				{/* Content */}
-				<div className="min-h-screen flex flex-col">
-					<div className="relative p-12 w-full sm:max-w-2xl sm:mx-auto">
-						<div className="overflow-hidden z-0 rounded-[0.8rem] relative p-3">
-							<form
-								role="form"
-								className="relative flex z-50 bg-white rounded-[0.8rem]"
-								onSubmit={(e) => {
-									e.preventDefault();
-									handleSearch();
-								}}
-							>
-								<input
-									type="text"
-									placeholder="Available Ingredients"
-									className="rounded-[0.8rem] flex-1 px-6 py-4 text-gray-700 focus:outline-none"
-								/>
-								<button
-									type="submit"
-									className="bg-indigo-500 text-white rounded-[0.8rem] font-semibold px-8 py-4 hover:bg-indigo-400 focus:bg-indigo-600 focus:outline-none"
-								>
-									Generate
-								</button>
-							</form>
-							<div className="glow glow-1 z-10 bg-pink-400 absolute"></div>
-							<div className="glow glow-2 z-20 bg-purple-400 absolute"></div>
-							<div className="glow glow-3 z-30 bg-yellow-400 absolute"></div>
-							<div className="glow glow-4 z-40 bg-blue-400 absolute"></div>
-						</div>
+			{/* Content */}
+			<div className="min-h-screen flex flex-col">
+				<div className="relative p-6 w-full max-w-lg mx-auto">
+					{/* Ingredients and Generate Button */}
+					<div className="flex flex-col sm:flex-row gap-4 mb-4">
+						<input
+							type="text"
+							value={ingredients}
+							onChange={(e) => setIngredients(e.target.value)}
+							placeholder="Enter ingredients"
+							className="rounded-lg px-4 py-2 w-full sm:flex-1 text-gray-700 focus:outline-none"
+						/>
+						<button
+							type="submit"
+							className="bg-blue-500 text-white rounded-lg px-6 py-2 w-full sm:w-auto hover:bg-blue-400 focus:bg-blue-600 focus:outline-none"
+							onClick={handleGenerate}
+						>
+							Generate Recipes
+						</button>
 					</div>
+
+					{/* Allergies Input (below the ingredients) */}
+					<input
+						type="text"
+						value={allergies}
+						onChange={(e) => setAllergies(e.target.value)}
+						placeholder="Enter allergies"
+						className="rounded-lg px-4 py-2 w-full text-gray-700 focus:outline-none"
+					/>			
 				</div>
 			</div>
 
 			{loading && <LoadingSpinner />}
 		</div>
 	);
-};
+}
 
 export default HeroSection;
